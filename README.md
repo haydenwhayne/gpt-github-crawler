@@ -1,6 +1,6 @@
 # gpt-github-crawler
 
-The gpt-github-crawler is an innovative tool inspired by the [BuilderIO/gpt-crawler](https://github.com/BuilderIO/gpt-crawler). It instead focuses on GitHub repositories, enabling users to crawl GitHub repository trees, match file patterns, and decode file contents. This tool is ideal for extracting and processing data from GitHub repositories to upload to your custom GPT.
+The gpt-github-crawler is an tool inspired by the [BuilderIO/gpt-crawler](https://github.com/BuilderIO/gpt-crawler). Instead of crawling sites it crawls GitHub repositories, enabling users to crawl repository trees, match file patterns, and decode file contents. This tool is ideal for extracting and processing data from these repositories to upload to your custom GPT.
 
 ## Features
 
@@ -43,9 +43,19 @@ Activate the environment:
 conda activate gpt-github-crawler
 ```
 
+### Installing the Package
+
+After activating the Conda environment, install the package in editable mode:
+
+```bash
+pip install -e .
+```
+
+This command installs the package and makes it available as a command-line tool. It also ensures that any changes you make to the code are immediately reflected when you run the tool.
+
 ## Configuration
 
-Set up your `config.json` in the project root with the following format:
+Set up your `config.json` in the project root, which has the following format:
 
 ```json
 {
@@ -64,13 +74,13 @@ Fill in the placeholders with your GitHub repository details and personal access
 
 ## Usage
 
-Execute the script with:
+Once the package is installed, you can run the script from anywhere in your system using the command:
 
 ```bash
-python gpt-github-crawler.py
+gpt-github-crawler
 ```
 
-The script will process the specified repository and generate a JSON file with the results.
+This command will execute the crawler script according to the configuration specified in `config.json` and generate a JSON file with the results.
 
 ## Contributing
 
