@@ -3,6 +3,25 @@ import base64
 import fnmatch
 import json
 
+def main():
+    print("Starting the crawler...")
+
+    # Load configuration from a JSON file
+    with open('../config.json', 'r', encoding='utf-8') as config_file:
+        config = json.load(config_file)
+
+    # Run the crawler
+    crawled_data = crawl_github_repo()
+
+    total = len(crawled_data)
+    successful = len([item for item in crawled_data if item['content']])
+    failed = total - successful
+
+    # Save the crawled data to a file
+    save_to_file(crawled_data, config['output_file_name'])
+
+    print(f"Finished! Total {total} request: {successful} successful, {failed} failed.")
+    
 def get_file_content(file_url):
     headers = {'Authorization': f'token {config["github_token"]}'}
     response = requests.get(file_url, headers=headers)
@@ -44,20 +63,4 @@ def save_to_file(data, file_name):
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 if __name__ == '__main__':
-    print("Starting the crawler...")
-
-    # Load configuration from a JSON file
-    with open('../config.json', 'r', encoding='utf-8') as config_file:
-        config = json.load(config_file)
-
-    # Run the crawler
-    crawled_data = crawl_github_repo()
-
-    total = len(crawled_data)
-    successful = len([item for item in crawled_data if item['content']])
-    failed = total - successful
-
-    # Save the crawled data to a file
-    save_to_file(crawled_data, config['output_file_name'])
-
-    print(f"Finished! Total {total} request: {successful} successful, {failed} failed.")
+    main()
