@@ -2,9 +2,11 @@ import requests
 import base64
 import fnmatch
 import json
+import logging
 
 def main():
-    print("Starting the crawler...")
+    setup_logging()
+    logging.info("Starting the crawler...")
 
     # Load configuration from a JSON file
     with open('../config.json', 'r', encoding='utf-8') as config_file:
@@ -20,7 +22,11 @@ def main():
     # Save the crawled data to a file
     save_to_file(crawled_data, config['output_file_name'])
 
-    print(f"Finished! Total {total} request: {successful} successful, {failed} failed.")
+    logging.info(f"Finished! Total {total} request: {successful} successful, {failed} failed.")
+    
+def setup_logging():
+    # Configure the logging
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
 def get_file_content(file_url):
     print(f"Crawling {file_url}")
@@ -32,7 +38,7 @@ def get_file_content(file_url):
         decoded_content = base64.b64decode(content).decode('utf-8')
         return decoded_content
     else:
-        print(f"Failed to retrieve file content: {response.status_code}")
+        logging.error(f"Failed to retrieve file content: {response.status_code}")
         return None
 
 def crawl_github_repo():
@@ -56,7 +62,7 @@ def crawl_github_repo():
                     crawled_files.append({'url': item['url'], 'content': ''})
                 count += 1
     else:
-        print(f"Failed to retrieve data: {response.status_code}")
+        logging.error(f"Failed to retrieve data: {response.status_code}")
 
     return crawled_files
 
