@@ -31,7 +31,9 @@ def crawl_github_repo():
                 file_content = get_file_content(item['url'])
                 if file_content:
                     crawled_files.append({'url': item['url'], 'content': file_content})
-                    count += 1
+                else:
+                    crawled_files.append({'url': item['url'], 'content': ''})
+                count += 1
     else:
         print(f"Failed to retrieve data: {response.status_code}")
 
@@ -51,7 +53,11 @@ if __name__ == '__main__':
     # Run the crawler
     crawled_data = crawl_github_repo()
 
+    total = len(crawled_data)
+    successful = len([item for item in crawled_data if item['content']])
+    failed = total - successful
+
     # Save the crawled data to a file
     save_to_file(crawled_data, config['output_file_name'])
 
-    print(f"Data successfully saved to {config['output_file_name']}")
+    print(f"Finished! Total {total} request: {successful} successful, {failed} failed.")
