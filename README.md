@@ -72,7 +72,7 @@ Set up your `config.json` in the project root, which has the following format:
 
 Fill in the placeholders with your GitHub repository details and personal access token.
 
-## Usage
+## Run your crawler
 
 Once the package is installed, you can run the script from anywhere in your system using the command:
 
