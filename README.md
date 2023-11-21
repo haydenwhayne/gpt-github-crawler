@@ -1,6 +1,6 @@
-# gpt-github-crawler
+# GPT GitHub Crawler
 
-The gpt-github-crawler is a tool inspired by the [BuilderIO/gpt-crawler](https://github.com/BuilderIO/gpt-crawler). Instead of crawling sites it crawls GitHub repositories, enabling users to crawl repository trees, match file patterns, and decode file contents. This tool is ideal for extracting and processing data from these repositories to upload to your custom GPT.
+A tool that crawls GitHub repositories instead of sites. Enabling users to crawl repository trees, match file patterns, and decode file contents. This tool is ideal for extracting and processing data from these repositories to upload to your custom GPT.
 
 ## Features
 
