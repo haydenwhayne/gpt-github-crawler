@@ -1,0 +1,4 @@
+name: gpt-github-crawler
+dependencies:
+  - python=3.8
+  - requests

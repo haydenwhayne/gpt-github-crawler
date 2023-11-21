@@ -1,0 +1,10 @@
+{
+    "base_url": "https://api.github.com/repos",
+    "repo_owner": "repository_owner",
+    "repo_name": "repository_name",
+    "branch_name": "main",
+    "match_pattern": "docs/**",
+    "max_files_to_crawl": 50,
+    "output_file_name": "output.json",
+    "github_token": "your_github_token"
+}
