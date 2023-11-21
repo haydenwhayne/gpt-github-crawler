@@ -23,6 +23,8 @@ def main():
     print(f"Finished! Total {total} request: {successful} successful, {failed} failed.")
     
 def get_file_content(file_url):
+    print(f"Crawling {file_url}")
+    
     headers = {'Authorization': f'token {config["github_token"]}'}
     response = requests.get(file_url, headers=headers)
     if response.status_code == 200:
