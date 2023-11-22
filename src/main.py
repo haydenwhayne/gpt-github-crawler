@@ -60,7 +60,7 @@ def crawl_github_repo(config: dict):
         count = 0
 
         for item in tree:
-            if item['type'] == 'blob' and fnmatch.fnmatch(item['path'], config['match_pattern']):
+            if item['type'] == 'blob' and fnmatch.fnmatch(item['path'], config['match']):
                 if count >= config['max_files_to_crawl']:
                     break
                 file_content = get_file_content(item['url'], config['github_token'])
