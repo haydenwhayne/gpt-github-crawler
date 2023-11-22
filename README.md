@@ -49,7 +49,7 @@ pip install -e .
 This command installs the package and makes it available as a command-line tool. It also ensures that any changes you make to the code are immediately reflected when you run the tool.
 
 ## Configuration
-Create your `config.json` in the project root, which has the following format:
+The crawler script uses a configuration file named `config.json` by default, located in the same directory as the script. Create your configuration file with the following format:
 
 ```json
 {
@@ -64,16 +64,26 @@ Create your `config.json` in the project root, which has the following format:
 }
 ```
 
-Fill in the placeholders with your GitHub repository details and personal access token. Leave ignore as an empty list if you don't want to ignore any patterns.
+Fill in the placeholders with your GitHub repository details and personal access token. Leave ignore as an empty list if you don't want to ignore any patterns. The output_file_name accepts both absolute and relative paths. If a relative path is provided, it will be resolve relative to the directory where the script is located.
 
 ## Run your crawler
-Once the package is installed, you can run the script from anywhere in your system using the command:
+Once the package is installed and configuration file is created, you can run the script from anywhere in your system using the command:
 
 ```bash
 gpt-github-crawler
 ```
 
-This command will execute the crawler script according to the configuration specified in `config.json` and generate a JSON file with the results.
+This command will execute the crawler script according to the configuration specified in `config.json`.
+
+You can specify a different configuration file using the `--config` argument when running the script. This argument is optional, and accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the script is located.
+
+For example, to use a configuration file located at `/path/to/your/config.json`, you can run the script like this:
+
+```bash
+gpt-github-crawler --config /path/to/your/config.json
+```
+
+These commands will generate a JSON file with the results to the output_file_name path that is specified.
 
 ## Contributing
 Contributions are welcome! To contribute:

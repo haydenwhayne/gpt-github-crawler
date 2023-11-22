@@ -4,20 +4,30 @@ import fnmatch
 import json
 import logging
 import os
+import argparse
     
 def main():
+    parser = argparse.ArgumentParser(description="A simple web crawler")
+    parser.add_argument("--config", help="Path to the configuration file")
+    args = parser.parse_args()
+    
     setup_logging()
     logging.info("Starting the crawler...")
 
     # Get the absolute path of the current directory
     current_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Construct the absolute path of the config.json file
-    config_file_path = os.path.join(current_dir, '..', 'config.json')
+    
+    # If --config argument is provided and it's not an absolute path, join it with current_dir
+    # If it's an absolute path, use it as is
+    # If --config argument is not provided, use 'config.json' in the current directory
+    if args.config:
+        config_file_path = os.path.join(current_dir, '..', args.config) if not os.path.isabs(args.config) else args.config
+    else:
+        config_file_path = os.path.join(current_dir, '..', 'config.json')
 
     # Check if the config.json file exists
     if not os.path.exists(config_file_path):
-        raise FileNotFoundError("The config.json file does not exist. Make sure you have created it in the root directory.")
+        raise FileNotFoundError(f"The {config_file_path} file does not exist. Make sure you have created it in the root directory and used a relative path or specified the absolute path.")
 
     # Load configuration from the config.json file
     with open(config_file_path, 'r', encoding='utf-8') as config_file:
@@ -34,7 +44,8 @@ def main():
     failed = total - successful
 
     # Save the crawled data to a file
-    save_to_file(crawled_data, config['output_file_name'])
+    output_file_path = os.path.join(current_dir, '..', config['output_file_name']) if not os.path.isabs(config['output_file_name']) else config['output_file_name']
+    save_to_file(crawled_data, output_file_path)
 
     logging.info(f"Finished! Total {total} request: {successful} successful, {failed} failed.")
     
