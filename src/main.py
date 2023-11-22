@@ -15,23 +15,23 @@ def main():
     logging.info("Starting the crawler...")
 
     # Get the absolute path of the current directory
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+    current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
     # If --config argument is provided and it's not an absolute path, join it with current_dir
     # If it's an absolute path, use it as is
     # If --config argument is not provided, use 'config.json' in the current directory
     if args.config:
-        config_file_path = os.path.join(current_dir, '..', args.config) if not os.path.isabs(args.config) else args.config
+        config_file_path = os.path.join(current_dir, args.config) if not os.path.isabs(args.config) else args.config
     else:
-        config_file_path = os.path.join(current_dir, '..', 'config.json')
+        config_file_path = os.path.join(current_dir, 'config.json')
 
-    # Check if the config.json file exists
-    if not os.path.exists(config_file_path):
-        raise FileNotFoundError(f"The {config_file_path} file does not exist. Make sure you have created it in the root directory and used a relative path or specified the absolute path.")
-    
     # Check if the config file ends with .json
     if not config_file_path.endswith('.json'):
         raise ValueError("The config file must be a JSON file.")
+    
+    # Check if the config.json file exists
+    if not os.path.exists(config_file_path):
+        raise FileNotFoundError(f"The {config_file_path} file does not exist.")
 
     # Load configuration from the config.json file
     with open(config_file_path, 'r', encoding='utf-8') as config_file:
@@ -39,6 +39,13 @@ def main():
 
     # Check config
     check_config(config)
+
+    # If the output_file_name in the config.json is not an absolute path, join it with current_dir
+    output_file_path = os.path.join(current_dir, config['output_file_name']) if not os.path.isabs(config['output_file_name']) else config['output_file_name']
+
+    # Check if the output file directory exists
+    if not os.path.exists(os.path.dirname(output_file_path)):
+        raise FileNotFoundError(f"The {os.path.dirname(output_file_path)} directory does not exist.")
 
     # Run the crawler
     crawled_data = crawl_github_repo(config)
@@ -48,7 +55,6 @@ def main():
     failed = total - successful
 
     # Save the crawled data to a file
-    output_file_path = os.path.join(current_dir, '..', config['output_file_name']) if not os.path.isabs(config['output_file_name']) else config['output_file_name']
     save_to_file(crawled_data, output_file_path)
 
     logging.info(f"Finished! Total {total} request: {successful} successful, {failed} failed.")
