@@ -4,8 +4,7 @@ import fnmatch
 import json
 import logging
 import os
-
-
+    
 def main():
     setup_logging()
     logging.info("Starting the crawler...")
@@ -16,9 +15,16 @@ def main():
     # Construct the absolute path of the config.json file
     config_file_path = os.path.join(current_dir, '..', 'config.json')
 
+    # Check if the config.json file exists
+    if not os.path.exists(config_file_path):
+        raise FileNotFoundError("The config.json file does not exist. Make sure you have created it in the root directory.")
+
     # Load configuration from the config.json file
     with open(config_file_path, 'r', encoding='utf-8') as config_file:
         config = json.load(config_file)
+
+    # Check config
+    check_config(config)
 
     # Run the crawler
     crawled_data = crawl_github_repo(config)
@@ -35,6 +41,22 @@ def main():
 def setup_logging():
     # Configure the logging
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def check_config(config: dict):
+    if 'match' not in config or not isinstance(config['match'], list):
+        raise ValueError("The config file must contain a list of match patterns.")
+    if 'repo_owner' not in config or not isinstance(config['repo_owner'], str):
+        raise ValueError("The config file must contain a string of repo owner.")
+    if 'repo_name' not in config or not isinstance(config['repo_name'], str):
+        raise ValueError("The config file must contain a string of repo name.")
+    if 'branch_name' not in config or not isinstance(config['branch_name'], str):
+        raise ValueError("The config file must contain a string of branch name.")
+    if 'github_token' not in config or not isinstance(config['github_token'], str):
+        raise ValueError("The config file must contain a string of github token.")
+    if 'max_files_to_crawl' not in config or not (isinstance(config['max_files_to_crawl'], int) or isinstance(config['max_files_to_crawl'], float)):
+        raise ValueError("The config file must contain an integer or float of max files to crawl.")
+    if 'output_file_name' not in config or not isinstance(config['output_file_name'], str):
+        raise ValueError("The config file must contain a string of output file name.")
     
 def get_file_content(file_url: str, github_token: str):
     print(f"Crawling {file_url}")
