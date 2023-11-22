@@ -98,6 +98,24 @@ def check_github_status_code(response: requests.Response):
     else:
         logging.error(f"Status Code {status_code}: {message}. Please check your config file and try again.")
 
+def format_ipynb_content(decoded_content):
+    content_dict = json.loads(decoded_content)
+    formatted_content = []
+    
+    cells = content_dict.get('cells', [])  # For .ipynb version 4 and above
+    if not cells:
+        # For .ipynb version 3 and below
+        worksheets = content_dict.get('worksheets', [])
+        cells = [cell for worksheet in worksheets for cell in worksheet.get('cells', [])]
+    
+    for cell in cells:
+        if cell['cell_type'] in ['code', 'markdown']:
+            source = cell.get('source', [])
+            cell_content = ''.join(source)
+            formatted_content.append(f"--- cell type: {cell['cell_type']} ---\n{cell_content}")
+    
+    return '\n'.join(formatted_content)
+
 def get_file_content(url: str, file_url: str, github_token: str):
     print(f"Crawling {file_url}")
     
@@ -106,6 +124,8 @@ def get_file_content(url: str, file_url: str, github_token: str):
     if response.status_code == 200:
         content = response.json().get('content', '')
         decoded_content = base64.b64decode(content).decode('utf-8')
+        if file_url.endswith('.ipynb'):
+            return format_ipynb_content(decoded_content)
         return decoded_content
     else:
         check_github_status_code(response)
