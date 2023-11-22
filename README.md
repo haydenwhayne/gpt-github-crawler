@@ -73,17 +73,19 @@ Once the package is installed and configuration file is created, you can run the
 gpt-github-crawler
 ```
 
-This command will execute the crawler script according to the configuration specified in `config.json`.
+This command will execute the crawler script according to the configuration specified in `config.json`. 
 
-You can specify a different configuration file using the `--config` argument when running the script. This argument is optional, and accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the script is located.
+> :information_source: **Note** A JSON file will be generated with the results to the `output_file_name` path that is specified.
 
-For example, to use a configuration file located at `/path/to/your/config.json`, you can run the script like this:
+You can specify a different configuration file using the `--config` argument when running the script. For example, to use a configuration file located at `/path/to/your/config.json`, you can run the script like this:
 
 ```bash
 gpt-github-crawler --config /path/to/your/config.json
 ```
 
-These commands will generate a JSON file with the results to the output_file_name path that is specified.
+This argument is optional, and accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the script is located.
+
+> :information_source: **Note** When crawling `.ipynb` files, only source markdown and code cells will be included in the JSON file. Outputs will not be included.
 
 ## Contributing
 Contributions are welcome! To contribute:
