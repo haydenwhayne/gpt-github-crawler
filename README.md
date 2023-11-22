@@ -55,7 +55,7 @@ Create your `config.json` in the project root, which has the following format:
     "repo_owner": "<repository_owner>",
     "repo_name": "<repository_name>",
     "branch_name": "<branch_name>",
-    "match": "<pattern_to_match_files>",
+    "match": ["<pattern_to_match_files>",...],
     "max_files_to_crawl": <max_number_of_files>,
     "output_file_name": "<output_filename>.json",
     "github_token": "<your_github_token>"
