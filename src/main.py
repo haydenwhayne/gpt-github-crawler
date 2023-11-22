@@ -3,13 +3,21 @@ import base64
 import fnmatch
 import json
 import logging
+import os
+
 
 def main():
     setup_logging()
     logging.info("Starting the crawler...")
 
-    # Load configuration from a JSON file
-    with open('../config.json', 'r', encoding='utf-8') as config_file:
+    # Get the absolute path of the current directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the absolute path of the config.json file
+    config_file_path = os.path.join(current_dir, '..', 'config.json')
+
+    # Load configuration from the config.json file
+    with open(config_file_path, 'r', encoding='utf-8') as config_file:
         config = json.load(config_file)
 
     # Run the crawler
