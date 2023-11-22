@@ -17,7 +17,7 @@ Before starting, ensure you have the following:
 First, clone the repository:
 
 ```bash
-git clone https://github.com/your-username/gpt-github-crawler.git
+git clone https://github.com/phloai/gpt-github-crawler.git
 ```
 
 Then, navigate to the cloned directory:
