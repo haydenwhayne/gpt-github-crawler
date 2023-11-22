@@ -56,7 +56,7 @@ The crawler script uses a configuration file named `config.json` by default, loc
     "repo_owner": "<repository_owner>",
     "repo_name": "<repository_name>",
     "branch_name": "<branch_name>",
-    "match": ["<pattern_to_match_files>",...],
+    "match": ["<pattern_to_match_files>", "**LICENSE",...],
     "ignore": ["<pattern_to_ignore_files>",...],
     "max_files_to_crawl": <max_number_of_files>,
     "output_file_name": "<output_filename>.json",
@@ -65,6 +65,8 @@ The crawler script uses a configuration file named `config.json` by default, loc
 ```
 
 Fill in the placeholders with your GitHub repository details and personal access token. Leave ignore as an empty list if you don't want to ignore any patterns. The output_file_name accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the script is located.
+
+> :information_source: **Note** It's recommended to keep `**LICENSE` in the match list, to always attach it to the output if it is available. 
 
 ## Run your crawler
 Once the package is installed and configuration file is created, you can run the script from anywhere in your system using the command:
