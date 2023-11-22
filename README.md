@@ -64,7 +64,7 @@ The crawler script uses a configuration file named `config.json` by default, loc
 }
 ```
 
-Fill in the placeholders with your GitHub repository details and personal access token. Leave ignore as an empty list if you don't want to ignore any patterns. The output_file_name accepts both absolute and relative paths. If a relative path is provided, it will be resolve relative to the directory where the script is located.
+Fill in the placeholders with your GitHub repository details and personal access token. Leave ignore as an empty list if you don't want to ignore any patterns. The output_file_name accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the script is located.
 
 ## Run your crawler
 Once the package is installed and configuration file is created, you can run the script from anywhere in your system using the command:
