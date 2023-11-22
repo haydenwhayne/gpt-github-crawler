@@ -64,10 +64,11 @@ def crawl_github_repo(config: dict):
                 if count >= config['max_files_to_crawl']:
                     break
                 file_content = get_file_content(item['url'], config['github_token'])
+                file_url = f"https://github.com/{config['repo_owner']}/{config['repo_name']}/blob/{config['branch_name']}/{item['path']}"
                 if file_content:
-                    crawled_files.append({'url': item['url'], 'content': file_content})
+                    crawled_files.append({'url': file_url, 'content': file_content})
                 else:
-                    crawled_files.append({'url': item['url'], 'content': ''})
+                    crawled_files.append({'url': file_url, 'content': ''})
                 count += 1
     else:
         logging.error(f"Failed to retrieve data: {response.status_code}")
