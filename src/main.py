@@ -98,11 +98,11 @@ def check_github_status_code(response: requests.Response):
     else:
         logging.error(f"Status Code {status_code}: {message}. Please check your config file and try again.")
 
-def get_file_content(file_url: str, github_token: str):
+def get_file_content(url: str, file_url: str, github_token: str):
     print(f"Crawling {file_url}")
     
     headers = {'Authorization': f'token {github_token}'}
-    response = requests.get(file_url, headers=headers)
+    response = requests.get(url, headers=headers)
     if response.status_code == 200:
         content = response.json().get('content', '')
         decoded_content = base64.b64decode(content).decode('utf-8')
@@ -127,8 +127,8 @@ def crawl_github_repo(config: dict):
                     continue  # Ignore the file if it matches any ignore pattern
                 if count >= config['max_files_to_crawl']:
                     break
-                file_content = get_file_content(item['url'], config['github_token'])
                 file_url = f"https://github.com/{config['repo_owner']}/{config['repo_name']}/blob/{config['branch_name']}/{item['path']}"
+                file_content = get_file_content(item['url'], file_url, config['github_token'])
                 if file_content:
                     crawled_files.append({'url': file_url, 'content': file_content})
                 else:
