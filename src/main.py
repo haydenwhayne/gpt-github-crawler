@@ -45,6 +45,8 @@ def setup_logging():
 def check_config(config: dict):
     if 'match' not in config or not isinstance(config['match'], list):
         raise ValueError("The config file must contain a list of match patterns.")
+    if 'ignore' not in config or not isinstance(config['ignore'], list):
+        raise ValueError("The config file must contain a list of ignore patterns.")
     if 'repo_owner' not in config or not isinstance(config['repo_owner'], str):
         raise ValueError("The config file must contain a string of repo owner.")
     if 'repo_name' not in config or not isinstance(config['repo_name'], str):
@@ -100,6 +102,8 @@ def crawl_github_repo(config: dict):
 
         for item in tree:
             if item['type'] == 'blob' and any(fnmatch.fnmatch(item['path'], pattern) for pattern in config['match']):
+                if any(fnmatch.fnmatch(item['path'], pattern) for pattern in config['ignore']):
+                    continue  # Ignore the file if it matches any ignore pattern
                 if count >= config['max_files_to_crawl']:
                     break
                 file_content = get_file_content(item['url'], config['github_token'])
