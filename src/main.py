@@ -65,9 +65,9 @@ def check_github_status_code(response: requests.Response):
     if status_code == 401:
         logging.error(f"401 Unauthorized. {message}. Please check your github personal access token and make sure it is valid.")
     elif status_code == 403:
-        logging.error(f"403 Forbidden: {message}. Please check your github personal access token and make sure it has the right permissions.")
+        logging.error(f"403 Forbidden: {message}. Please check your github personal access token and make sure it has the right permissions (e.g. Read-Only Contents and Metadata).")
     elif status_code == 404:
-        logging.error(f"404 Not Found: {message}. Please check your repo owner, repo name and branch name.")
+        logging.error(f"404 Not Found: {message}. Please check your repo owner, repo name and branch name. If accessing a private repo, make sure your github personal access token has the right permissions (e.g. Read-Only Contents and Metadata).")
     elif status_code == 429:
         logging.error(f"429 Too Many Requests: {message}. Try again later.")
     elif status_code == 500:
