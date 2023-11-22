@@ -28,6 +28,10 @@ def main():
     # Check if the config.json file exists
     if not os.path.exists(config_file_path):
         raise FileNotFoundError(f"The {config_file_path} file does not exist. Make sure you have created it in the root directory and used a relative path or specified the absolute path.")
+    
+    # Check if the config file ends with .json
+    if not config_file_path.endswith('.json'):
+        raise ValueError("The config file must be a JSON file.")
 
     # Load configuration from the config.json file
     with open(config_file_path, 'r', encoding='utf-8') as config_file:
@@ -68,8 +72,8 @@ def check_config(config: dict):
         raise ValueError("The config file must contain a string of your github personal access token.")
     if 'max_files_to_crawl' not in config or not (isinstance(config['max_files_to_crawl'], int) or isinstance(config['max_files_to_crawl'], float)):
         raise ValueError("The config file must contain an integer or float of max files to crawl.")
-    if 'output_file_name' not in config or not isinstance(config['output_file_name'], str):
-        raise ValueError("The config file must contain a string of output file name.")
+    if 'output_file_name' not in config or not isinstance(config['output_file_name'], str) or not config['output_file_name'].endswith('.json'):
+        raise ValueError("The config file must contain a string of output file name and it must be a JSON file.")
 
 def check_github_status_code(response: requests.Response):
     # Check the status code of the response and print the json message if it exists
