@@ -48,15 +48,14 @@ pip install -e .
 This command installs the package and makes it available as a command-line tool. It also ensures that any changes you make to the code are immediately reflected when you run the tool.
 
 ## Configuration
-Set up your `config.json` in the project root, which has the following format:
+Create your `config.json` in the project root, which has the following format:
 
 ```json
 {
-    "base_url": "https://api.github.com/repos",
     "repo_owner": "<repository_owner>",
     "repo_name": "<repository_name>",
     "branch_name": "<branch_name>",
-    "match_pattern": "<pattern_to_match_files>",
+    "match": "<pattern_to_match_files>",
     "max_files_to_crawl": <max_number_of_files>,
     "output_file_name": "<output_filename>.json",
     "github_token": "<your_github_token>"
