@@ -11,6 +11,7 @@ A tool that crawls GitHub repositories instead of sites. Enabling users to crawl
 ## Prerequisites
 Before starting, ensure you have the following:
 - Python 3.6 or higher.
+- GitHub personal access token.
 
 ## Installation
 First, clone the repository:
