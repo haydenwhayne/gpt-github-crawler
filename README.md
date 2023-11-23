@@ -5,7 +5,7 @@ A tool that crawls GitHub repositories instead of sites. Enabling users to crawl
 - **Recursive GitHub Repository Crawling:** Efficiently traverses the GitHub repository tree.
 - **Pattern Matching:** Utilizes patterns to selectively crawl files in the repository.
 - **Content Decoding:** Automatically decodes file contents for easy processing.
-- **Configurable via JSON:** Allows easy configuration through an external `config.json` file.
+- **Configurable via JSON:** Allows easy configuration through an external `config.json` file, by default.
 - **JSON Output:** Outputs the crawled data into a structured JSON file.
 
 ## Prerequisites
