@@ -9,8 +9,10 @@ import argparse
 def main():
     parser = argparse.ArgumentParser(description="A simple web crawler")
     parser.add_argument("--config", help="Path to the configuration file")
+    # boolean flag, if provided, local_path will be set to True
+    parser.add_argument("--local", action="store_true", help="Crawl local path instead of github repo")
     args = parser.parse_args()
-    
+
     setup_logging()
     logging.info("Starting the crawler...")
 
@@ -38,7 +40,7 @@ def main():
         config = json.load(config_file)
 
     # Check config
-    check_config(config)
+    check_config(config, args.local)
 
     # If the output_file_name in the config.json is not an absolute path, join it with current_dir
     output_file_path = os.path.join(current_dir, config['output_file_name']) if not os.path.isabs(config['output_file_name']) else config['output_file_name']
@@ -46,9 +48,17 @@ def main():
     # Check if the output file directory exists
     if not os.path.exists(os.path.dirname(output_file_path)):
         raise FileNotFoundError(f"The {os.path.dirname(output_file_path)} directory does not exist.")
+    
+    # Check if local path exists
+    # If local path exists, check if it's a directory
+    if args.local:
+        if not os.path.exists(config['local_path']):
+            raise FileNotFoundError(f"The {config['local_path']} directory does not exist.")
+        if not os.path.isdir(config['local_path']):
+            raise ValueError(f"The {config['local_path']} is not a directory.")
 
     # Run the crawler
-    crawled_data = crawl_github_repo(config)
+    crawled_data = crawl_github_repo(config, args.local)
 
     total = len(crawled_data)
     successful = len([item for item in crawled_data if item['content']])
@@ -63,19 +73,25 @@ def setup_logging():
     # Configure the logging
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def check_config(config: dict):
+def check_config(config: dict, local: bool):
     if 'match' not in config or not isinstance(config['match'], list):
         raise ValueError("The config file must contain a list of match patterns.")
     if 'ignore' not in config or not isinstance(config['ignore'], list):
         raise ValueError("The config file must contain a list of ignore patterns.")
-    if 'repo_owner' not in config or not isinstance(config['repo_owner'], str):
-        raise ValueError("The config file must contain a string of repo owner.")
-    if 'repo_name' not in config or not isinstance(config['repo_name'], str):
-        raise ValueError("The config file must contain a string of repo name.")
-    if 'branch_name' not in config or not isinstance(config['branch_name'], str):
-        raise ValueError("The config file must contain a string of branch name.")
-    if 'github_token' not in config or not isinstance(config['github_token'], str):
-        raise ValueError("The config file must contain a string of your github personal access token.")
+    
+    if local:
+        if 'local_path' not in config or not isinstance(config['local_path'], str):
+            raise ValueError("In --local mode, the config file must contain a string of local path.")
+    else:
+        if 'repo_owner' not in config or not isinstance(config['repo_owner'], str):
+            raise ValueError("The config file must contain a string of repo owner.")
+        if 'repo_name' not in config or not isinstance(config['repo_name'], str):
+            raise ValueError("The config file must contain a string of repo name.")
+        if 'branch_name' not in config or not isinstance(config['branch_name'], str):
+            raise ValueError("The config file must contain a string of branch name.")
+        if 'github_token' not in config or not isinstance(config['github_token'], str):
+            raise ValueError("The config file must contain a string of your github personal access token.")
+        
     if 'max_files_to_crawl' not in config or not (isinstance(config['max_files_to_crawl'], int) or isinstance(config['max_files_to_crawl'], float)):
         raise ValueError("The config file must contain an integer or float of max files to crawl.")
     if 'output_file_name' not in config or not isinstance(config['output_file_name'], str) or not config['output_file_name'].endswith('.json'):
@@ -116,7 +132,18 @@ def format_ipynb_content(decoded_content):
     
     return '\n'.join(formatted_content)
 
-def get_file_content(url: str, file_url: str, github_token: str):
+def get_local_file_content(file_path: str):
+    print(f"Crawling {file_path}")
+    
+    file_content = None
+    with open(file_path, 'r', encoding='utf-8') as f:
+        file_content = f.read()
+        if file_path.endswith('.ipynb'):
+            return format_ipynb_content(file_content)
+        
+    return file_content
+
+def get_url_file_content(url: str, file_url: str, github_token: str):
     print(f"Crawling {file_url}")
     
     headers = {'Authorization': f'token {github_token}'}
@@ -131,31 +158,50 @@ def get_file_content(url: str, file_url: str, github_token: str):
         check_github_status_code(response)
         return None
 
-def crawl_github_repo(config: dict):
-    api_url = f"https://api.github.com/repos/{config['repo_owner']}/{config['repo_name']}/git/trees/{config['branch_name']}?recursive=1"
-    headers = {'Authorization': f'token {config["github_token"]}'}
-    response = requests.get(api_url, headers=headers)
+def crawl_github_repo(config: dict, local: bool):
     crawled_files = []
-
-    if response.status_code == 200:
-        tree = response.json().get('tree', [])
+    if local:
         count = 0
+        for root, dirs, files in os.walk(config['local_path']):
+            for file in files:
+                relative_path = os.path.relpath(os.path.join(root, file), config['local_path'])
 
-        for item in tree:
-            if item['type'] == 'blob' and any(fnmatch.fnmatch(item['path'], pattern) for pattern in config['match']):
-                if any(fnmatch.fnmatch(item['path'], pattern) for pattern in config['ignore']):
-                    continue  # Ignore the file if it matches any ignore pattern
-                if count >= config['max_files_to_crawl']:
-                    break
-                file_url = f"https://github.com/{config['repo_owner']}/{config['repo_name']}/blob/{config['branch_name']}/{item['path']}"
-                file_content = get_file_content(item['url'], file_url, config['github_token'])
-                if file_content:
-                    crawled_files.append({'url': file_url, 'content': file_content})
-                else:
-                    crawled_files.append({'url': file_url, 'content': ''})
-                count += 1
+                if any(fnmatch.fnmatch(relative_path, pattern) for pattern in config['match']):
+                    if any(fnmatch.fnmatch(relative_path, pattern) for pattern in config['ignore']):
+                        continue
+                    if count >= config['max_files_to_crawl']:
+                        break
+                    file_path = os.path.join(root, file)
+                    file_content = get_local_file_content(file_path)
+                    if file_content:
+                        crawled_files.append({'path': file_path, 'content': file_content})
+                    else:
+                        crawled_files.append({'path': file_path, 'content': ''})
+                    count += 1
     else:
-        check_github_status_code(response)
+        api_url = f"https://api.github.com/repos/{config['repo_owner']}/{config['repo_name']}/git/trees/{config['branch_name']}?recursive=1"
+        headers = {'Authorization': f'token {config["github_token"]}'}
+        response = requests.get(api_url, headers=headers)
+
+        if response.status_code == 200:
+            tree = response.json().get('tree', [])
+            count = 0
+
+            for item in tree:
+                if item['type'] == 'blob' and any(fnmatch.fnmatch(item['path'], pattern) for pattern in config['match']):
+                    if any(fnmatch.fnmatch(item['path'], pattern) for pattern in config['ignore']):
+                        continue  # Ignore the file if it matches any ignore pattern
+                    if count >= config['max_files_to_crawl']:
+                        break
+                    file_url = f"https://github.com/{config['repo_owner']}/{config['repo_name']}/blob/{config['branch_name']}/{item['path']}"
+                    file_content = get_url_file_content(item['url'], file_url, config['github_token'])
+                    if file_content:
+                        crawled_files.append({'url': file_url, 'content': file_content})
+                    else:
+                        crawled_files.append({'url': file_url, 'content': ''})
+                    count += 1
+        else:
+            check_github_status_code(response)
 
     return crawled_files
 

@@ -1,20 +1,25 @@
 # GPT GitHub Crawler
-A tool that crawls GitHub repositories instead of sites. Enabling users to crawl repository trees, match file patterns, and decode file contents. This tool is ideal for extracting and processing data from these repositories to upload to your custom GPT.
+A tool that crawls both GitHub repositories instead of sites. Enabling users to crawl repository trees, match file patterns, and decode file contents. This tool is ideal for extracting and processing data from repositories to upload to your custom GPT.
 
 ## Features
 - **Recursive GitHub Repository Crawling:** Efficiently traverses the GitHub repository tree.
 - **Pattern Matching:** Utilizes patterns to selectively crawl files in the repository.
 - **Content Decoding:** Automatically decodes file contents for easy processing.
-- **Configurable via JSON:** Allows easy configuration through an external `config.json` file, by default.
+- **Configurable via JSON:** Allows easy configuration through an external `config.json` file by default, this can be altered with the `--config` argument.
 - **JSON Output:** Outputs the crawled data into a structured JSON file.
+- **Local Mode:** Supports crawling local repositories by specifying the local path in the configuration file and enabling local mode with the `--local` argument.
+
+> :information_source: **Note** Remote repositories are crawled by default, unless local mode is enabled.
+
+> :information_source: **Note** For the fastest crawling it is recommended to clone the repository you want to crawl and run in local mode.
 
 ## Prerequisites
 Before starting, ensure you have the following:
 - Python 3.6 or higher.
-- GitHub personal access token.
+- GitHub personal access token, if running on a remote repository.
 
 ## Installation
-First, clone the repository:
+First, clone this repository:
 
 ```bash
 git clone https://github.com/phloai/gpt-github-crawler.git
@@ -64,9 +69,23 @@ The crawler script uses a configuration file named `config.json` by default, loc
 }
 ```
 
-Fill in the placeholders with your GitHub repository details and personal access token. Leave ignore as an empty list if you don't want to ignore any patterns. The output_file_name accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the script is located.
+If running in `--local` mode, create your configuration with the following format:
+
+```json
+{
+    "local_path": "<path_to_your_local_repo>",
+    "match": ["<pattern_to_match_files>", "**LICENSE",...],
+    "ignore": ["<pattern_to_ignore_files>",...],
+    "max_files_to_crawl": <max_number_of_files>,
+    "output_file_name": "<output_filename>.json"
+}
+```
 
 > :information_source: **Note** It's recommended to keep `**LICENSE` in the match list, to always attach it to the output if it is available. 
+
+> :information_source: **Note** Ignore should be an empty list if you don't want to ignore any patterns. 
+
+> :information_source: **Note** The `output_file_name` accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the **script is located.** It's recommended to always use absolute paths.
 
 ## Run your crawler
 Once the package is installed and configuration file is created, you can run the script from anywhere in your system using the command:
@@ -75,9 +94,7 @@ Once the package is installed and configuration file is created, you can run the
 gpt-github-crawler
 ```
 
-This command will execute the crawler script according to the configuration specified in `config.json`. 
-
-> :information_source: **Note** A JSON file will be generated with the results to the `output_file_name` path that is specified.
+This command will execute the crawler script according to the configuration specified in `config.json`. A JSON file will be generated with the results to the `output_file_name` path that is specified.
 
 You can specify a different configuration file using the `--config` argument when running the script. For example, to use a configuration file located at `/path/to/your/config.json`, you can run the script like this:
 
@@ -85,7 +102,15 @@ You can specify a different configuration file using the `--config` argument whe
 gpt-github-crawler --config /path/to/your/config.json
 ```
 
-This argument is optional, and accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the script is located.
+> :information_source: **Note** This argument is optional, and accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the **script is located.** It's recommended to always use absolute paths.
+
+You can enable local mode by adding the `--local` argument when running the script. When enabled the script will iterate over all the files in the `local_path` specified in the configuration file. To enable local mode you should run the script like this:
+
+```bash
+gpt-github-crawler --local
+```
+
+> :information_source: The `local_path` should be a directory. It accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the **script is being run on the command-line.** It's recommended to always use absolute paths.
 
 > :information_source: **Note** When crawling `.ipynb` files, only source markdown and code cells will be included in the JSON file. Outputs will not be included.
 
