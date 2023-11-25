@@ -80,9 +80,21 @@ def check_config(config: dict, local: bool):
         raise ValueError("The config file must contain a list of ignore patterns.")
     
     if local:
+        if 'repo_owner' in config and isinstance(config['repo_owner'], str):
+            logging.warning("The repo owner in the config file is ignored, remove the --local flag to crawl the remote repo instead.")
+        if 'repo_name' in config and isinstance(config['repo_name'], str):
+            logging.warning("The repo name in the config file is ignored, remove the --local flag to crawl the remote repo instead.")
+        if 'branch_name' in config and isinstance(config['branch_name'], str):
+            logging.warning("The branch name in the config file is ignored, remove the --local flag to crawl the remote repo instead.")
+        if 'github_token' in config and isinstance(config['github_token'], str):
+            logging.warning("The github personal access token in the config file is ignored, remove the --local flag to crawl the remote repo instead.")
+
         if 'local_path' not in config or not isinstance(config['local_path'], str):
-            raise ValueError("In --local mode, the config file must contain a string of local path.")
+            raise ValueError("Local mode is enabled with the --local flag, the config file must contain a string of local path.")
     else:
+        if 'local_path' in config and isinstance(config['local_path'], str):
+            logging.warning("The local path in the config file is ignored, add the --local flag to crawl the local path instead.")
+        
         if 'repo_owner' not in config or not isinstance(config['repo_owner'], str):
             raise ValueError("The config file must contain a string of repo owner.")
         if 'repo_name' not in config or not isinstance(config['repo_name'], str):
