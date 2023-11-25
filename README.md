@@ -1,5 +1,5 @@
 # GPT GitHub Crawler
-A tool that crawls both GitHub repositories instead of sites. Enabling users to crawl repository trees, match file patterns, and decode file contents. This tool is ideal for extracting and processing data from repositories to upload to your custom GPT.
+A tool that crawls GitHub repositories instead of sites. Enabling users to crawl repository trees, match file patterns, and decode file contents. This tool is ideal for extracting and processing data from repositories to upload to your custom GPT.
 
 ## Features
 - **Recursive GitHub Repository Crawling:** Efficiently traverses the GitHub repository tree.
