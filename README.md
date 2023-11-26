@@ -5,9 +5,10 @@ A tool that crawls GitHub repositories instead of sites. Enabling users to crawl
 - **Recursive GitHub Repository Crawling:** Efficiently traverses the GitHub repository tree.
 - **Pattern Matching:** Utilizes patterns to selectively crawl files in the repository.
 - **Content Decoding:** Automatically decodes file contents for easy processing.
-- **Configurable via JSON:** Allows easy configuration through an external `config.json` file by default, this can be altered with the `--config` flag.
+- [**Configurable via JSON:**](#configuration) Allows easy configuration through an external `config.json` file by default, this can be altered with the `--config` flag.
 - **JSON Output:** Outputs the crawled data into a structured JSON file.
 - **Local Mode:** Supports crawling local repositories by specifying the local path in the configuration file and enabling local mode with the `--local` flag.
+- [**Recommended GPT Instructions:**](#recommended-gpt-instructions) A recommended format for GPT instructions, that can be copied and filled to properly look up and search through uploaded knowledge files outputted by this script and [BuilderIO/gpt-crawler](https://github.com/BuilderIO/gpt-crawler).
 
 > [!NOTE]
 > Remote repositories are crawled by default, unless local mode is enabled.
@@ -118,6 +119,29 @@ gpt-github-crawler --local
 > The `local_path` should be a directory. It accepts both absolute and relative paths. If a relative path is provided, it will be resolved relative to the directory where the **script is being run on the command-line.** It's recommended to always use absolute paths.
 > 
 > When crawling `.ipynb` files, only source markdown and code cells will be included in the JSON file. Outputs will not be included.
+
+## Recommended GPT Instructions
+After uploading all of your knowledge files it is recommended to copy the following as template into your custom GPT instructions. You should fill in the areas in brackets, with the specified information unique to your assistant. I found this format for the GPT instructions to work best with the outputted knowledge files from this script and [BuilderIO/gpt-crawler](https://github.com/BuilderIO/gpt-crawler). If you find a better template, please contribute and submit a pull request so we can all benefit from your improved instructions!
+
+```markdown
+[Fill in your assistants role here] 
+
+I should always take into consideration these key instructions to inform my response:
+
+1) [List key instructions unique to only your assistant]
+2) ...
+
+When approached with a query, I will search through the provided knowledge files. My responses will be based on the patterns, syntax, and structures found within the source information of these documents. It's crucial that I do not need specific examples to respond, I should learn and abstract code and documentation found inside the source information of these documents to generate my own code that will assist the user.
+
+I should take into consideration these key notes about the files to assist with my Retrieval-Augmented-Generation (RAG):
+
+1) The files are jsons composed of a list of dictionaries. 
+2) Each dictionary typically contains keys like "title", "url", "path", "content", and "html".  
+3) The "title" offers a quick overview of the web page's content. 
+4) The "url" and "path" provide additional clues about the nature of the content. 
+5) The "title", "url", and "path" may not always accurately reflect the content. 
+6) The "content" and "html" keys hold the main source information, including code and documentation.
+```
 
 ## Contributing
 Contributions are welcome! To contribute:
