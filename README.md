@@ -122,7 +122,11 @@ gpt-github-crawler --local
 > When crawling `.ipynb` files, only source markdown and code cells will be included in the JSON file. Outputs will not be included.
 
 ## Table of Contents Compatibility
-After creating your knowledge files, it is recommended to create a Table of Contents (ToC) to assist your GPT's ability to navigate them effectively. Without a ToC your GPT is stuck with looking for keywords and can struggle with scrolling through large knowledge files. With a ToC, you can adjust your GPT's instruction to process the entire ToC to understand which knowledge files and which lines inside the knowledge files it should scroll to. Empowering your GPT to scroll and gain more context of the important regions of your knowledge files. Our [Knowledge Summarizer GPT](https://chat.openai.com/g/g-McHIHioC4-knowledge-summarizer) can you help with creating this, it scrolls through your knowledge files and creates the Table of Contents in the recommended format:
+After creating your knowledge files, it is recommended to create a Table of Contents (ToC) to assist your GPT's ability to navigate them effectively. Without a ToC your GPT is stuck with looking for keywords and can struggle with scrolling through large knowledge files. 
+
+With a ToC, you can adjust your GPT's instruction to process the entire ToC to understand which knowledge files and which lines inside the knowledge files it should scroll to. Empowering your GPT to scroll and gain more context of the important regions of your knowledge files. 
+
+Our [Knowledge Summarizer GPT](https://chat.openai.com/g/g-McHIHioC4-knowledge-summarizer) can you help with creating this, it scrolls through your knowledge files and creates the Table of Contents in the recommended format:
 
 ```
 [filename]
