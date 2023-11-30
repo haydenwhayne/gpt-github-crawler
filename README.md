@@ -10,6 +10,7 @@ A tool that crawls GitHub repositories instead of sites. Enabling users to crawl
 - **Local Mode:** Supports crawling local repositories by specifying the local path in the configuration file and enabling local mode with the `--local` flag.
 - [**Table of Contents Compatibility:**](#table-of-contents-compatibility) Output is compatible with a generated Table of Contents (ToC). It is recommended to generate your ToC using our custom GPT, [Knowledge Summarizer GPT](https://chat.openai.com/g/g-McHIHioC4-knowledge-summarizer). For more info on the ToC and our GPT visit the [Knowledge Summarizer GPT GitHub](https://github.com/phloai/knowledge-summarizer-gpt).
 - [**Recommended GPT Instructions:**](#recommended-gpt-instructions) A recommended format for GPT instructions, that can be copied and filled to properly look up and search through uploaded knowledge files outputted by this script and [BuilderIO/gpt-crawler](https://github.com/BuilderIO/gpt-crawler).
+- **Sample GPT:** For a sample GPT that uses the ToC, recommended instructions, and the knowledge files outputted by this script, look at our [Mojo Teacher GPT GitHub](https://github.com/phloai/mojo-teacher-gpt). It contains the link to the GPT instructions and knowledge files used to create it.
 
 > [!NOTE]
 > Remote repositories are crawled by default, unless local mode is enabled.
@@ -142,27 +143,7 @@ Our [Knowledge Summarizer GPT](https://chat.openai.com/g/g-McHIHioC4-knowledge-s
 ```
 
 ## Recommended GPT Instructions
-After uploading all of your knowledge files, including your Table of Contents, it is recommended to copy the following as template into your custom GPT instructions. You should fill in the areas in brackets, with the specified information unique to your assistant. I found this format for the GPT instructions to work best with the outputted knowledge files from this script and [BuilderIO/gpt-crawler](https://github.com/BuilderIO/gpt-crawler). If you find a better template, please contribute and submit a pull request so we can all benefit from your improved instructions!
-
-```markdown
-[Fill in your assistants role here] 
-
-I should always take into consideration these key instructions to inform my response:
-
-1) [List key instructions unique to only your assistant]
-2) ...
-
-When approached with a query, I will search through the provided knowledge files. My responses will be based on the patterns, syntax, and structures found within the source information of these documents. It's crucial that I do not need specific examples to respond, I should learn and abstract code and documentation found inside the source information of these documents to generate my own code that will assist the user.
-
-I should take into consideration these key notes about the files to assist with my Retrieval-Augmented-Generation (RAG):
-
-1) The files are jsons composed of a list of dictionaries. 
-2) Each dictionary typically contains keys like "title", "url", "path", "content", and "html".  
-3) The "title" offers a quick overview of the web page's content. 
-4) The "url" and "path" provide additional clues about the nature of the content. 
-5) The "title", "url", and "path" may not always accurately reflect the content. 
-6) The "content" and "html" keys hold the main source information, including code and documentation.
-```
+After uploading all of your knowledge files, including your Table of Contents, it is recommended to copy the [instruction-template.md](https://github.com/phloai/gpt-github-crawler/instructions-template.md) into your custom GPT instructions. You should fill in the areas in brackets, with the specified information unique to your assistant. I found this format for the GPT instructions to work best with the outputted knowledge files from this script and [BuilderIO/gpt-crawler](https://github.com/BuilderIO/gpt-crawler). If you find a better template, please contribute and submit a pull request so we can all benefit from your improved instructions!
 
 ## Contributing
 Contributions are welcome! To contribute:
