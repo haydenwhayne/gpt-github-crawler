@@ -129,16 +129,17 @@ With a ToC, you can adjust your GPT's instruction to process the entire ToC to u
 
 Our [Knowledge Summarizer GPT](https://chat.openai.com/g/g-McHIHioC4-knowledge-summarizer) can you help with creating this, it scrolls through your knowledge files and creates the Table of Contents in the recommended format:
 
-```
-[filename]
+``` json
 [
 	{
-		“Title”: [a descriptive title that reflect the “title”, “url”, “path”, “html”, “content”]
-		“Description”: [two to three sentence description describing the contents inside the “html” and “content”]
-		“Key Words”: [list of important key words to help with navigation]
-		“Index”: [the list index position in the knowledge file of where to find the source information]
-		“Lines”: [the line positions inside the knowledge file to find the source information]
-	}
+		"Knowledge Filename": "Filename of the knowledge file",
+      		"Title": "Descriptive title",
+		"Description": "Brief description of the contents",
+		"Key Words": ["List", "of", "keywords"],
+		"Index": "Index position in the knowledge file",
+		"Lines": "Line positions in the knowledge file"
+	},
+	...
 ]
 ```
 
