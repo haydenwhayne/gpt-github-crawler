@@ -36,7 +36,7 @@ These instructions guide the custom GPT in effectively using knowledge files, em
 		"Index": "Index position in the knowledge file",
 		"Lines": "Line positions in the knowledge file"
 	},
-	…
+	...
 ]
 ```
 
